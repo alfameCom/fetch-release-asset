@@ -4,6 +4,7 @@ description: 'Fetch release asset from GitHub release with specified version and
 inputs:
   owner:
     description: 'Owner of the repo'
+    required: true
   repo:
     description: 'Where to fetch the release'
     required: true
