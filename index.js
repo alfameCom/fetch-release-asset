@@ -53,7 +53,7 @@ async function run() {
 
 		core.setOutput('content', binary.data);
 
-		fs.writeFile(output ? output : filename, binary.data);
+		fs.writeFile(output ? output : filename, binary.data, () => {});
 	} catch (error) {
 		core.setFailed(error.message);
 	}
