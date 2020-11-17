@@ -2,6 +2,7 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const { Octokit } = require('@octokit/core');
 const fs = require('fs');
+const axios = require('axios');
 
 async function run() {
 	try {
