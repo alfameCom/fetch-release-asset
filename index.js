@@ -12,29 +12,38 @@ async function run() {
 		const token = core.getInput('token');
 		const output = core.getInput('output');
 
-		const oktokit = new Octokit(token ? { auth: token } : null);
+		const octokit = new Octokit(token ? { auth: token } : null);
 
-		const release = await octokit.request('GET /repos/{owner}/{repo}/releases/tags/{tag}', {
-			owner,
-			repo,
-			tag
-		});
+        const release = await octokit.request('GET /repos/{owner}/{repo}/releases/tags/{tag}', {
+            owner,
+            repo,
+            tag
+        });
 
-		const asset = release.assets.find(asset => {
-			return asset.name === filename;
-		});
+        const release_id = release.data.id;
 
-		const binary = await octokit.request('GET /repos/{owner}/{repo}/releases/{asset_id}', {
-			owner,
-			repo,
-			asset_id: asset.id
-		});
+        const assets = await octokit.request('GET /repos/{owner}/{repo}/releases/{release_id}/assets', {
+            owner,
+            repo,
+            release_id
+        });
 
-		core.setOutput('content', binary);
+        const asset = assets.data.find(asset => {
+            return asset.name === filename;
+        });
 
-		console.log(binary);
+        const asset_id = asset.id;
 
-		fs.writeFile(filename, binary);
+        const binary = await axios.get(`https://api.github.com/repos/${owner}/${repo}/releases/assets/${asset_id}`, {
+            headers: {
+                Authorization: `Basic ${Buffer.from(token).toString('base64')}`,
+                Accept: "application/octet-stream"
+            }
+        });
+
+        core.setOutput('content', binary.data);
+
+		fs.writeFile(output ? output : filename, binary.data);
 	} catch (error) {
 		core.setFailed(error.message);
 	}
