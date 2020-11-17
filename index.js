@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const { Octokit } = require('@octokit/core');
-const write = require('write');
+const fs = require('fs');
 
 async function run() {
 	try {
@@ -32,7 +32,9 @@ async function run() {
 
 		core.setOutput('content', binary);
 
-		write.sync(output ? output : filename, binary, { newline: true });
+		console.log(binary);
+
+		fs.writeFile(filename, binary);
 	} catch (error) {
 		core.setFailed(error.message);
 	}
