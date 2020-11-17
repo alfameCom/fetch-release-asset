@@ -1,5 +1,4 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
 const { Octokit } = require('@octokit/core');
 const fs = require('fs');
 const axios = require('axios');
@@ -15,8 +14,6 @@ async function run() {
 
 		const octokit = new Octokit(token ? { auth: token } : {});
 
-		core.info(octokit);
-
 		const release = await octokit.request('GET /repos/{owner}/{repo}/releases/tags/{tag}', {
 			owner,
 			repo,
@@ -24,8 +21,6 @@ async function run() {
 		});
 
 		const release_id = release.data.id;
-
-		core.info('release_id: ' + release_id);
 
 		const assets = await octokit.request('GET /repos/{owner}/{repo}/releases/{release_id}/assets', {
 			owner,
@@ -48,8 +43,6 @@ async function run() {
 				Accept: "application/octet-stream"
 			}
 		});
-
-		core.info(binary.data);
 
 		core.setOutput('content', binary.data);
 
