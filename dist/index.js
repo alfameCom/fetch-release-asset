@@ -49,8 +49,6 @@ async function run() {
 
 		const asset_id = asset.id;
 
-		core.info('asset_id: ' + asset_id);
-
 		// Why is axios used here? https://github.com/octokit/rest.js/issues/967
 		const binary = await axios.get(`https://api.github.com/repos/${owner}/${repo}/releases/assets/${asset_id}`, {
 			headers: {
