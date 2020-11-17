@@ -25,4 +25,4 @@ outputs:
     description: 'The content of the fetched asset'
 runs:
   using: 'node12'
-  main: 'index.js'
+  main: 'dist/index.js'
