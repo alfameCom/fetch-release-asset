@@ -34,9 +34,10 @@ async function run() {
 
         const asset_id = asset.id;
 
+		// Why is axios used here? https://github.com/octokit/rest.js/issues/967
         const binary = await axios.get(`https://api.github.com/repos/${owner}/${repo}/releases/assets/${asset_id}`, {
             headers: {
-                Authorization: `Basic ${Buffer.from(token).toString('base64')}`,
+                Authorization: `Basic ${Buffer.from(token ? token : '').toString('base64')}`,
                 Accept: "application/octet-stream"
             }
         });
