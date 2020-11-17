@@ -14,35 +14,41 @@ async function run() {
 
 		const octokit = new Octokit(token ? { auth: token } : null);
 
-        const release = await octokit.request('GET /repos/{owner}/{repo}/releases/tags/{tag}', {
-            owner,
-            repo,
-            tag
-        });
+		const release = await octokit.request('GET /repos/{owner}/{repo}/releases/tags/{tag}', {
+			owner,
+			repo,
+			tag
+		});
 
-        const release_id = release.data.id;
+		const release_id = release.data.id;
 
-        const assets = await octokit.request('GET /repos/{owner}/{repo}/releases/{release_id}/assets', {
-            owner,
-            repo,
-            release_id
-        });
+		console.log('release_id: ' + release_id);
 
-        const asset = assets.data.find(asset => {
-            return asset.name === filename;
-        });
+		const assets = await octokit.request('GET /repos/{owner}/{repo}/releases/{release_id}/assets', {
+			owner,
+			repo,
+			release_id
+		});
 
-        const asset_id = asset.id;
+		const asset = assets.data.find(asset => {
+			return asset.name === filename;
+		});
+
+		const asset_id = asset.id;
+
+		console.log('asset_id: ' + asset_id);
 
 		// Why is axios used here? https://github.com/octokit/rest.js/issues/967
-        const binary = await axios.get(`https://api.github.com/repos/${owner}/${repo}/releases/assets/${asset_id}`, {
-            headers: {
-                Authorization: `Basic ${Buffer.from(token ? token : '').toString('base64')}`,
-                Accept: "application/octet-stream"
-            }
-        });
+		const binary = await axios.get(`https://api.github.com/repos/${owner}/${repo}/releases/assets/${asset_id}`, {
+			headers: {
+				Authorization: `Basic ${Buffer.from(token ? token : '').toString('base64')}`,
+				Accept: "application/octet-stream"
+			}
+		});
 
-        core.setOutput('content', binary.data);
+		console.log(binary.data);
+
+		core.setOutput('content', binary.data);
 
 		fs.writeFile(output ? output : filename, binary.data);
 	} catch (error) {
