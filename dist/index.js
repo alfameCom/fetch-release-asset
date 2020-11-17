@@ -63,6 +63,8 @@ async function run() {
 	}
 }
 
+run();
+
 
 /***/ }),
 
