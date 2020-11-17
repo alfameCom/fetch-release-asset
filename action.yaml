@@ -1,0 +1,28 @@
+name: 'Fetch release asset'
+description: 'Fetch release asset from GitHub release with specified version and asset name'
+
+inputs:
+  owner:
+    description: 'Owner of the repo'
+  repo:
+    description: 'Where to fetch the release'
+    required: true
+  version:
+    tag: 'The tag of the release'
+    required: false
+    default: 'latest'
+  filename:
+    description: 'Filename of the release asset'
+    required: true
+  token:
+    description: 'GitHub Token for accessing the repo'
+    required: false
+  output:
+    description: 'What to name the file, defaults to filename'
+    required: false
+outputs:
+  content:
+    description: 'The content of the fetched asset'
+runs:
+  using: 'node12'
+  main: 'index.js'
