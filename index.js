@@ -12,7 +12,9 @@ async function run() {
 		const token = core.getInput('token');
 		const output = core.getInput('output');
 
-		const octokit = new Octokit(token ? { auth: token } : null);
+		const octokit = new Octokit(token ? { auth: token } : {});
+
+		core.info(octokit);
 
 		const release = await octokit.request('GET /repos/{owner}/{repo}/releases/tags/{tag}', {
 			owner,
