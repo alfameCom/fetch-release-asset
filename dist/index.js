@@ -29,7 +29,7 @@ async function run() {
 
 		const release_id = release.data.id;
 
-		console.log('release_id: ' + release_id);
+		core.info('release_id: ' + release_id);
 
 		const assets = await octokit.request('GET /repos/{owner}/{repo}/releases/{release_id}/assets', {
 			owner,
@@ -43,7 +43,7 @@ async function run() {
 
 		const asset_id = asset.id;
 
-		console.log('asset_id: ' + asset_id);
+		core.info('asset_id: ' + asset_id);
 
 		// Why is axios used here? https://github.com/octokit/rest.js/issues/967
 		const binary = await axios.get(`https://api.github.com/repos/${owner}/${repo}/releases/assets/${asset_id}`, {
@@ -53,7 +53,7 @@ async function run() {
 			}
 		});
 
-		console.log(binary.data);
+		core.info(binary.data);
 
 		core.setOutput('content', binary.data);
 
